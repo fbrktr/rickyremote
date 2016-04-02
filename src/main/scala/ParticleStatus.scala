@@ -20,8 +20,8 @@ class ParticleStatus(brain:ActorRef) extends Actor
 
   val particleURL = "https://api.particle.io/v1"
 
-  val particleToken = context.system.settings.config.getString("particleToken")
-  val rickyId = context.system.settings.config.getString("particleID")
+  val particleToken = sys.env.get("PARTICLE_TOKEN").get
+  val rickyId = sys.env.get("PARTICLE_DEVICE_ID").get
 
   val particleTokenSuffix = s"?access_token=$particleToken&format=raw"
 
@@ -30,7 +30,7 @@ class ParticleStatus(brain:ActorRef) extends Actor
   var particleStatus = ""
 
   override def preStart() = {
-    println(context.system.settings.config.getString("particleToken"))
+    //println(context.system.settings.config.getString("particleToken"))
     updateParticleStatus()
   }
 
