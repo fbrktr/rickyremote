@@ -10,8 +10,10 @@ import akka.util.ByteString
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
-class ParticleStatus(brain:ActorRef) extends Actor
-  with ActorLogging {
+/**
+This Actor is in charge of Particle Cloud access
+ */
+class ParticleStatus(brain:ActorRef) extends Actor {
 
   import context.dispatcher
   val http = Http(context.system)
@@ -27,15 +29,14 @@ class ParticleStatus(brain:ActorRef) extends Actor
 
   val rickyLocalIpStatusURL = s"$particleURL/devices/$rickyId/localip$particleTokenSuffix"
 
-  var particleStatus = ""
-
+  /**
+    * Asks for update on creation
+    */
   override def preStart() = {
-    //println(context.system.settings.config.getString("particleToken"))
     updateParticleStatus()
   }
 
   def receive = {
-
     case HttpResponse(StatusCodes.OK, headers, entity, toto) =>
       val resp: Future[ByteString] = entity.withContentType(ContentTypes.`application/json`).dataBytes.runFold(ByteString(""))(_ ++ _)
       resp onComplete {
@@ -44,15 +45,22 @@ class ParticleStatus(brain:ActorRef) extends Actor
       }
 
     case HttpResponse(code, _, _, _) =>
-      log.info("Request failed, response code: " + code)
+      println("Request failed, response code: " + code)
 
   }
 
+  /**
+    * Http request
+    */
   def updateParticleStatus(): Unit ={
     http.singleRequest(HttpRequest(uri = rickyLocalIpStatusURL ))
       .pipeTo(self)
   }
 
+  /**
+    * Http response handler
+    * @param bs response body as ByteString
+    */
   def handleParticleStatus(bs:ByteString): Unit ={
     val rickyIP = bs.decodeString(HttpCharsets.`UTF-8`.value)
     println(s"Got Ricky's local IP from Particle Cloud : $rickyIP")
