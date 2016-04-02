@@ -1,6 +1,9 @@
+/project/target
+/.idea
 *.class
 *.log
 
+/project/project
 # sbt specific
 .cache
 .history
