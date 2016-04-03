@@ -1,6 +1,8 @@
+package ricky.particle
+
 import java.net.InetAddress
 
-import akka.actor.{Actor, ActorLogging, ActorRef}
+import akka.actor.{Actor, ActorRef}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.pattern.pipe

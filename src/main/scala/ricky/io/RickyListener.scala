@@ -1,4 +1,4 @@
-package io
+package ricky.io
 
 import java.net.{InetAddress, InetSocketAddress}
 
