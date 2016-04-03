@@ -1,4 +1,4 @@
-package io
+package ricky.io
 
 import java.net.{InetAddress, InetSocketAddress}
 
@@ -27,7 +27,7 @@ class RickyRemoteController(brain: ActorRef) extends Actor {
   def ready(connection: ActorRef): Receive = {
     case msg: String =>
       println(s"--> $msg")
-      connection ! UdpConnected.Send(ByteString(msg))
+      connection ! UdpConnected.Send(ByteString(msg+'\0'))
     case UdpConnected.Disconnect =>
       println("Disconnect from Ricky")
       connection ! UdpConnected.Disconnect
